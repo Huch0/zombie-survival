@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,7 +23,7 @@ namespace Unity.Scripts.AI
         private float lastAttackTime;
 
         [Tooltip("Delay after death where the GameObject is destroyed (to allow for animation)")]
-        public float DeathDuration = 0f;
+        public float DeathDuration = 10f;
 
         // Start is called before the first frame update
         void Start()
@@ -133,14 +134,36 @@ namespace Unity.Scripts.AI
         {
             Debug.Log("Zombie Damaged: " + damage);
         }
-
         void OnDie()
         {
+            Debug.Log("Zombie Died!");
+
+            // Trigger the death animation
             animator.SetTrigger("Dead");
 
+            // Stop the NavMeshAgent to prevent further movement
             navMeshAgent.enabled = false;
 
-            Destroy(gameObject, DeathDuration);
+            // Start the coroutine to wait for the death animation to finish
+            StartCoroutine(WaitForDeathAnimation());
         }
+
+        private IEnumerator WaitForDeathAnimation()
+        {
+            // Get the length of the death animation
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            while (!stateInfo.IsName("Dead"))
+            {
+                stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                yield return null;
+            }
+
+            // Wait for the animation to complete
+            yield return new WaitForSeconds(stateInfo.length);
+
+            // Destroy the zombie game object after the animation
+            Destroy(gameObject);
+        }
+
     }
 }

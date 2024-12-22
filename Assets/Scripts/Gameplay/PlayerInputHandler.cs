@@ -22,7 +22,7 @@ namespace Unity.Scripts.Gameplay
             MoveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             LookInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
             JumpInput = Input.GetKeyDown(KeyCode.Space);
-            ShootInput = Input.GetMouseButtonDown(0);
+            ShootInput = Input.GetMouseButton(0); // Changed from GetMouseButtonDown to GetMouseButton
             ReloadInput = Input.GetKeyDown(KeyCode.R);
             PickUpInput = Input.GetKeyDown(KeyCode.E);
             SprintInput = Input.GetKey(KeyCode.LeftShift);

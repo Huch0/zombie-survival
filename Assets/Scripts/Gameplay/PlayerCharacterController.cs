@@ -12,6 +12,7 @@ namespace Unity.Scripts.Gameplay
         private CharacterController characterController;
         private PlayerInputHandler inputHandler;
         private Camera playerCamera;
+        private Gun gun;
 
         // Camera settings
         float m_CameraVerticalAngle = 0f;
@@ -32,6 +33,7 @@ namespace Unity.Scripts.Gameplay
             characterController = GetComponent<CharacterController>();
             inputHandler = GetComponent<PlayerInputHandler>();
             playerCamera = GetComponentInChildren<Camera>();
+            gun = GetComponentInChildren<Gun>();
 
             print("PlayerCamera: " + playerCamera);
         }
@@ -41,6 +43,7 @@ namespace Unity.Scripts.Gameplay
         {
             HandleMovement();
             HandleCameraRotation();
+            HandleGunRotation();
             HandleActions();
         }
 
@@ -88,6 +91,13 @@ namespace Unity.Scripts.Gameplay
             // print("LookInput.x: " + inputHandler.LookInput.x + " LookInput.y: " + inputHandler.LookInput.y + " m_CameraVerticalAngle: " + m_CameraVerticalAngle);
         }
 
+        void HandleGunRotation()
+        {
+            // Implement gun rotation logic
+            // Rotate the gun based on the camera's rotation
+            gun.transform.rotation = playerCamera.transform.rotation;
+        }
+
 
 
         void HandleActions()
@@ -111,13 +121,13 @@ namespace Unity.Scripts.Gameplay
         void Shoot()
         {
             // Implement shooting logic
-            Debug.Log("Shooting");
+            gun.Shoot();
         }
 
         void Reload()
         {
             // Implement reloading logic
-            Debug.Log("Reloading");
+            gun.Reload();
         }
 
         void PickUp()
