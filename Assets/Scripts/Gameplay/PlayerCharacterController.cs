@@ -33,6 +33,7 @@ namespace Unity.Scripts.Gameplay
         private float knockbackDuration;
         private float knockbackTimer;
         private bool isKnockedBack;
+        private PlayerInteraction playerInteraction;
 
 
         // Start is called before the first frame update
@@ -43,6 +44,7 @@ namespace Unity.Scripts.Gameplay
             playerCamera = GetComponentInChildren<Camera>();
             gun = GetComponentInChildren<Gun>();
             health = GetComponent<Health>();
+            playerInteraction = GetComponent<PlayerInteraction>();
 
             health.OnDie += OnDie;
             health.OnDamaged += OnDamaged;
@@ -161,8 +163,14 @@ namespace Unity.Scripts.Gameplay
 
         void PickUp()
         {
-            // Implement picking up logic
-            Debug.Log("Picking up");
+            if (playerInteraction != null)
+            {
+                playerInteraction.PickUpItem();
+            }
+            else
+            {
+                Debug.LogWarning("No item to pick up.");
+            }
         }
 
         // Example: Applying knockback when taking damage
