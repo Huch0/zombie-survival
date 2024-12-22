@@ -10381,6 +10381,8 @@ GameObject:
   - component: {fileID: 1434903422}
   - component: {fileID: 1434903425}
   - component: {fileID: 1434903424}
+  - component: {fileID: 1434903426}
+  - component: {fileID: 1434903427}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -10462,6 +10464,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff128ad329dde412c88bc8efe1be7871, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &1434903426
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434903420}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1434903427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434903420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfdbb464b3eb3432cb01fd7801cd0f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 10
+  CriticalHealthRatio: 0.3
 --- !u!1001 &1441807772
 PrefabInstance:
   m_ObjectHideFlags: 0

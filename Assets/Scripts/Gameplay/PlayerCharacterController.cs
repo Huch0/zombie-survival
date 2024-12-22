@@ -6,13 +6,14 @@ using Unity.Scripts.Game;
 
 namespace Unity.Scripts.Gameplay
 {
-    [RequireComponent(typeof(CharacterController), typeof(PlayerInputHandler))]
+    [RequireComponent(typeof(Health), typeof(CharacterController), typeof(PlayerInputHandler))]
     public class PlayerCharacterController : MonoBehaviour
     {
         private CharacterController characterController;
         private PlayerInputHandler inputHandler;
         private Camera playerCamera;
         private Gun gun;
+        private Health health;
 
         // Camera settings
         float m_CameraVerticalAngle = 0f;
@@ -27,6 +28,13 @@ namespace Unity.Scripts.Gameplay
         private Vector3 velocity;
         private bool isGrounded;
 
+        private Vector3 knockbackDirection;
+        private float knockbackSpeed;
+        private float knockbackDuration;
+        private float knockbackTimer;
+        private bool isKnockedBack;
+
+
         // Start is called before the first frame update
         void Start()
         {
@@ -34,6 +42,10 @@ namespace Unity.Scripts.Gameplay
             inputHandler = GetComponent<PlayerInputHandler>();
             playerCamera = GetComponentInChildren<Camera>();
             gun = GetComponentInChildren<Gun>();
+            health = GetComponent<Health>();
+
+            health.OnDie += OnDie;
+            health.OnDamaged += OnDamaged;
 
             print("PlayerCamera: " + playerCamera);
         }
@@ -49,24 +61,41 @@ namespace Unity.Scripts.Gameplay
 
         void HandleMovement()
         {
-            isGrounded = characterController.isGrounded;
-            if (isGrounded && velocity.y < 0)
+            if (isKnockedBack)
             {
-                velocity.y = -2f;
+                // Apply knockback movement
+                characterController.Move(knockbackDirection * knockbackSpeed * Time.deltaTime);
+                knockbackTimer += Time.deltaTime;
+
+                // Check if knockback duration has elapsed
+                if (knockbackTimer >= knockbackDuration)
+                {
+                    isKnockedBack = false;
+                }
             }
-
-            Vector3 move = transform.right * inputHandler.MoveInput.x + transform.forward * inputHandler.MoveInput.y;
-            float speed = inputHandler.SprintInput ? sprintSpeed : moveSpeed;
-            characterController.Move(move * speed * Time.deltaTime);
-
-            if (inputHandler.JumpInput && isGrounded)
+            else
             {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
+                // Existing movement code
+                isGrounded = characterController.isGrounded;
+                if (isGrounded && velocity.y < 0)
+                {
+                    velocity.y = -2f;
+                }
 
-            velocity.y += gravity * Time.deltaTime;
-            characterController.Move(velocity * Time.deltaTime);
+                Vector3 move = transform.right * inputHandler.MoveInput.x + transform.forward * inputHandler.MoveInput.y;
+                float speed = inputHandler.SprintInput ? sprintSpeed : moveSpeed;
+                characterController.Move(move * speed * Time.deltaTime);
+
+                if (inputHandler.JumpInput && isGrounded)
+                {
+                    velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+                }
+
+                velocity.y += gravity * Time.deltaTime;
+                characterController.Move(velocity * Time.deltaTime);
+            }
         }
+
 
         void HandleCameraRotation()
         {
@@ -134,6 +163,36 @@ namespace Unity.Scripts.Gameplay
         {
             // Implement picking up logic
             Debug.Log("Picking up");
+        }
+
+        // Example: Applying knockback when taking damage
+        void OnDamaged(float damage, GameObject damageSource)
+        {
+            Debug.Log("Player Damaged: " + damage);
+
+            // Calculate knockback direction away from the damage source
+            Vector3 direction = transform.position - damageSource.transform.position;
+            float knockbackForce = 5f; // Adjust as needed
+            float knockbackTime = 0.5f; // Adjust as needed
+
+            ApplyKnockback(direction, knockbackForce, knockbackTime);
+        }
+
+        public void ApplyKnockback(Vector3 direction, float speed, float duration)
+        {
+            knockbackDirection = direction.normalized;
+            knockbackSpeed = speed;
+            knockbackDuration = duration;
+            knockbackTimer = 0f;
+            isKnockedBack = true;
+        }
+
+
+        void OnDie()
+        {
+            Debug.Log("Player Died!");
+
+            // Implement player death logic
         }
     }
 }

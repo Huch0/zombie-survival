@@ -112,23 +112,32 @@ namespace Unity.Scripts.AI
             {
                 lastAttackTime = Time.time;
 
+                // Trigger the attack animation
                 animator.SetTrigger("Attack");
 
-                // if (target.TryGetComponent(out Health targetHealth))
-                // {
-                //     targetHealth.TakeDamage(attackDamage);
-                // }
+                // Start a coroutine to apply damage after the animation ends
+                StartCoroutine(ApplyDamageAfterDelay(0.3f)); // Adjust delay based on animation timing
             }
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private IEnumerator ApplyDamageAfterDelay(float delay)
         {
-            if (collision.gameObject.CompareTag("Player"))
+            yield return new WaitForSeconds(delay);
+
+            // Apply damage if the target is still in range
+            if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
             {
-                Debug.Log("Zombie collided with Player!");
-                // Add logic here for collision handling (e.g., reducing player health).
+                Health targetHealth = target.GetComponent<Health>();
+                if (targetHealth != null)
+                {
+                    targetHealth.TakeDamage(attackDamage, gameObject);
+                }
+
+                Debug.Log("Zombie applied damage to the target!");
             }
         }
+
+
 
         void OnDamaged(float damage, GameObject damageSource)
         {
