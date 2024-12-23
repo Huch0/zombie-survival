@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 using Unity.Scripts.AI;
+using Unity.Scripts.UI;
+using Unity.Scripts.Gameplay;
 
 namespace Unity.Scripts.Game
 {
     public class GameFlowManager : MonoBehaviour
     {
         public GameObject player;
+        public PlayerCharacterController playerCharacterController;
         public GameObject zombiePrefab;
 
         public List<GameObject> currentZombies = new List<GameObject>();
@@ -19,12 +22,15 @@ namespace Unity.Scripts.Game
         public Transform[] zombieSpawnPoints;
         public Transform[] vaccineSpawnPoints;
 
+        public PlayerUIManager playerUIManager;
+
         public int initialZombieCount = 5;
         public int vaccinesToCollect = 5;
         public float waveInterval = 5f;
 
         private int currentWave = 1;
         private int zombiesRemaining;
+        private int zombiesToKill;
         private int vaccinesCollected = 0;
         private int playerScore = 0;
 
@@ -37,6 +43,8 @@ namespace Unity.Scripts.Game
                 Debug.LogError("Player reference is missing!");
                 return;
             }
+
+            playerCharacterController = player.GetComponent<PlayerCharacterController>();
 
             StartWave();
         }
@@ -57,11 +65,17 @@ namespace Unity.Scripts.Game
         {
             Debug.Log("Starting Wave: " + currentWave);
 
-            zombiesRemaining = currentWave * initialZombieCount;
+            zombiesToKill = currentWave * initialZombieCount;
             vaccinesCollected = 0;
 
-            SpawnZombies(zombiesRemaining);
+            SpawnZombies(zombiesToKill);
             SpawnVaccines(vaccinesToCollect);
+
+            zombiesRemaining = zombiesToKill;
+
+            playerUIManager.UpdateWave(currentWave);
+            playerUIManager.UpdateZombies(zombiesRemaining, zombiesToKill);
+            playerUIManager.UpdateVaccines(vaccinesCollected, vaccinesToCollect);
         }
 
         void SpawnZombies(int count)
@@ -101,6 +115,8 @@ namespace Unity.Scripts.Game
             vaccinesCollected++;
             Debug.Log("Vaccines Collected: " + vaccinesCollected);
 
+            playerUIManager.UpdateVaccines(vaccinesCollected, vaccinesToCollect);
+
             if (vaccinesCollected >= vaccinesToCollect && zombiesRemaining <= 0)
             {
                 StartCoroutine(NextWave());
@@ -113,6 +129,9 @@ namespace Unity.Scripts.Game
             playerScore += 10;
             Debug.Log("Zombie Killed. Zombies Remaining: " + zombiesRemaining);
             Debug.Log("Player Score: " + playerScore);
+
+            playerUIManager.UpdateZombies(zombiesRemaining, zombiesToKill);
+            playerUIManager.UpdateScore(playerScore);
 
             if (zombiesRemaining <= 0 && vaccinesCollected >= vaccinesToCollect)
             {
@@ -141,6 +160,19 @@ namespace Unity.Scripts.Game
             {
                 Destroy(vaccine);
             }
+        }
+
+        public void OnShoot()
+        {
+            int ammoCapacity = playerCharacterController.gun.ammoCapacity;
+            int remainingAmmo = playerCharacterController.gun.currentAmmo;
+
+            playerUIManager.UpdateBullets(remainingAmmo, ammoCapacity);
+        }
+
+        public void OnPlayerHit()
+        {
+            playerUIManager.UpdateHealth(playerCharacterController.health.CurrentHealth, playerCharacterController.health.MaxHealth);
         }
 
         void PlayerDied()
