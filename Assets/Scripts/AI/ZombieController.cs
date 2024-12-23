@@ -143,6 +143,8 @@ namespace Unity.Scripts.AI
         {
             Debug.Log("Zombie Damaged: " + damage);
         }
+        public event System.Action OnZombieKilled; // Event to notify when a zombie is killed.
+
         void OnDie()
         {
             Debug.Log("Zombie Died!");
@@ -153,9 +155,16 @@ namespace Unity.Scripts.AI
             // Stop the NavMeshAgent to prevent further movement
             navMeshAgent.enabled = false;
 
+            // Notify listeners
+            if (OnZombieKilled != null)
+            {
+                OnZombieKilled.Invoke();
+            }
+
             // Start the coroutine to wait for the death animation to finish
             StartCoroutine(WaitForDeathAnimation());
         }
+
 
         private IEnumerator WaitForDeathAnimation()
         {

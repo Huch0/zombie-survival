@@ -50,6 +50,7 @@ namespace Unity.Scripts.Game
 
             // Perform actions like adding to inventory
             AddToInventory(nearbyItem);
+            nearbyItem.OnCollected();
 
             // Destroy the item in the scene
             Destroy(nearbyItem.gameObject);
