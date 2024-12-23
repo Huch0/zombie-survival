@@ -45,9 +45,12 @@ namespace Unity.Scripts.AI
             Debug.Log("ZombieController initialized.");
         }
 
+        private bool isDead = false;
         // Update is called once per frame
         void Update()
         {
+            if (isDead) return;
+
             FindClosestTarget();
 
             if (target == null) return;
@@ -147,7 +150,8 @@ namespace Unity.Scripts.AI
 
         void OnDie()
         {
-            Debug.Log("Zombie Died!");
+            isDead = true;
+            Debug.Log("Zombie Died! isDead = " + isDead);
 
             // Trigger the death animation
             animator.SetTrigger("Dead");
@@ -179,9 +183,7 @@ namespace Unity.Scripts.AI
             // Wait for the animation to complete
             yield return new WaitForSeconds(stateInfo.length);
 
-            // Destroy the zombie game object after the animation
-            Destroy(gameObject);
+            // Disable the zombie game object after the animation
         }
-
     }
 }

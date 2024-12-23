@@ -11,8 +11,13 @@ namespace Unity.Scripts.Game
     {
         public GameObject player;
         public GameObject zombiePrefab;
+
+        public List<GameObject> currentZombies = new List<GameObject>();
         public GameObject vaccinePrefab;
-        public Transform[] spawnPoints;
+        public List<GameObject> currentVaccines = new List<GameObject>();
+
+        public Transform[] zombieSpawnPoints;
+        public Transform[] vaccineSpawnPoints;
 
         public int initialZombieCount = 5;
         public int vaccinesToCollect = 5;
@@ -63,7 +68,7 @@ namespace Unity.Scripts.Game
         {
             for (int i = 0; i < count; i++)
             {
-                Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                Transform spawnPoint = zombieSpawnPoints[Random.Range(0, zombieSpawnPoints.Length)];
                 GameObject zombie = Instantiate(zombiePrefab, spawnPoint.position, Quaternion.identity);
                 ZombieController zombieController = zombie.GetComponent<ZombieController>();
 
@@ -72,6 +77,8 @@ namespace Unity.Scripts.Game
                 zombieController.moveSpeed += currentWave * 0.2f;
 
                 zombieController.OnZombieKilled += OnZombieKilled;
+
+                currentZombies.Add(zombie);
             }
         }
 
@@ -79,11 +86,13 @@ namespace Unity.Scripts.Game
         {
             for (int i = 0; i < count; i++)
             {
-                Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                Transform spawnPoint = vaccineSpawnPoints[Random.Range(0, vaccineSpawnPoints.Length)];
                 GameObject vaccine = Instantiate(vaccinePrefab, spawnPoint.position, Quaternion.identity);
                 Item vaccineItem = vaccine.GetComponent<Item>();
 
                 vaccineItem.OnVaccineCollected += OnVaccineCollected;
+
+                currentVaccines.Add(vaccine);
             }
         }
 
@@ -117,7 +126,21 @@ namespace Unity.Scripts.Game
             yield return new WaitForSeconds(waveInterval);
 
             currentWave++;
+            ClearWave();
             StartWave();
+        }
+
+        void ClearWave()
+        {
+            foreach (GameObject zombie in currentZombies)
+            {
+                Destroy(zombie);
+            }
+
+            foreach (GameObject vaccine in currentVaccines)
+            {
+                Destroy(vaccine);
+            }
         }
 
         void PlayerDied()
