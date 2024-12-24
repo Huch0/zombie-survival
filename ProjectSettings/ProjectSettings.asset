@@ -84,6 +84,7 @@ PlayerSettings:
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
   Force IOS Speakers When Recording: 0
+  audioSpatialExperience: 0
   deferSystemGesturesMode: 0
   hideHomeButton: 0
   submitAnalytics: 1
@@ -765,13 +766,13 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 0
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 808652b5-2cff-408f-bc62-78f13599c7e3
+  cloudProjectId: 
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: zombie-survival
-  organizationId: cldud1
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
