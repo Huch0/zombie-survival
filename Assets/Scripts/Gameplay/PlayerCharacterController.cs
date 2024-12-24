@@ -9,11 +9,12 @@ namespace Unity.Scripts.Gameplay
     [RequireComponent(typeof(Health), typeof(CharacterController), typeof(PlayerInputHandler))]
     public class PlayerCharacterController : MonoBehaviour
     {
+        public GameFlowManager gameFlowManager;
         private CharacterController characterController;
         private PlayerInputHandler inputHandler;
         private Camera playerCamera;
-        private Gun gun;
-        private Health health;
+        public Gun gun;
+        public Health health;
 
         // Camera settings
         float m_CameraVerticalAngle = 0f;
@@ -177,6 +178,7 @@ namespace Unity.Scripts.Gameplay
         void OnDamaged(float damage, GameObject damageSource)
         {
             Debug.Log("Player Damaged: " + damage);
+            gameFlowManager.OnPlayerHit();
 
             // Calculate knockback direction away from the damage source
             Vector3 direction = transform.position - damageSource.transform.position;

@@ -11,12 +11,14 @@ namespace Unity.Scripts.Gameplay
         public int ammoCapacity = 30;
         public float shootingSpeed = 1f;
         public int damage = 1;
-        private int currentAmmo;
+        public int currentAmmo;
         private float lastShootTime;
         [SerializeField]
         float bulletSpeed = 20f;
         [SerializeField]
         public float bulletRadius = 0.01f;
+
+        public GameFlowManager gameFlowManager;
 
         void Start()
         {
@@ -30,6 +32,8 @@ namespace Unity.Scripts.Gameplay
             {
                 lastShootTime = Time.time;
                 currentAmmo--;
+                gameFlowManager.OnShoot();
+
                 Debug.Log("Shooting");
                 SpawnBullet();
             }
