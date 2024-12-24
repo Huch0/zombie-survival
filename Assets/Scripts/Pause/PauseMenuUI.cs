@@ -64,18 +64,6 @@ namespace Unity.Scripts.UI
             pauseMenuPanel.SetActive(false); // Pause 메뉴 비활성화
             // AudioListener.pause = false; // 소리 재개 (선택 사항)
         }
-
-        // UI 버튼을 통해 Resume 호출
-        public void OnResumeButtonPressed()
-        {
-            ResumeGame();
-        }
-
-        // UI 버튼을 통해 Quit 호출
-        public void OnQuitButtonPressed()
-        {
-            // 메인 메뉴로 이동 (씬 이름은 프로젝트에 따라 수정)
-            UnityEngine.SceneManagement.SceneManager.LoadScene("StartScene");
-        }
+        
     }
 }
