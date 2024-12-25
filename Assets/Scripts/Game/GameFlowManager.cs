@@ -33,12 +33,13 @@ namespace Unity.Scripts.Game
         private int zombiesToKill;
         private int vaccinesCollected = 0;
         private int playerScore = 0;
-        public int maxWave = 1;
+        private int maxWave = 5;
 
         private bool isPlayerAlive = true;
 
         void Start()
         {
+            Debug.Log($"GameFlowManager Initialized: maxWave = {maxWave}");
             if (player == null)
             {
                 Debug.LogError("Player reference is missing!");
@@ -145,7 +146,7 @@ namespace Unity.Scripts.Game
             if (currentWave >= maxWave)
             {
                 Debug.Log("Maximum wave reached! Ending the game.");
-                EndGame(); // 게임 종료 또는 다른 로직
+                EndGame(); // 게임 종료 로직
                 yield break; // 코루틴 종료
             }
 
