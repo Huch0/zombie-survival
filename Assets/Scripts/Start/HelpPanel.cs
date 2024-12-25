@@ -6,6 +6,7 @@ using DG.Tweening;
 public class HelpPanel : MonoBehaviour
 {
     private RectTransform panel;
+    private bool isPanelOpen = false;
 
     private void Awake()
     {
@@ -14,7 +15,7 @@ public class HelpPanel : MonoBehaviour
 
         // 시작 시 패널을 비활성화 상태로 설정
         panel.localScale = Vector3.zero; // 크기를 0으로 설정
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
 
         Debug.Log("HelpPanel Awake: Panel initialized and set to inactive.");
     }
@@ -22,8 +23,11 @@ public class HelpPanel : MonoBehaviour
     // 패널을 보여주는 함수
     public void ShowPanel()
     {
+        if (isPanelOpen) return; // panel 열려있으면 실행하지 않음음
+
         Debug.Log("ShowPanel called.");
 
+        isPanelOpen = true;
         gameObject.SetActive(true);
         Debug.Log("HelpPanel is now active.");
 
@@ -40,7 +44,11 @@ public class HelpPanel : MonoBehaviour
     // 패널을 닫는 함수
     public void HidePanel()
     {
+        if (!isPanelOpen) return;
+
         Debug.Log("HidePanel called.");
+
+        isPanelOpen = false;
 
         // DOTween을 사용해 패널을 부드럽게 크기를 줄인다 (애니메이션 효과)
         panel.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBack).OnStart(() =>
@@ -49,8 +57,14 @@ public class HelpPanel : MonoBehaviour
         }).OnComplete(() =>
         {
             Debug.Log("Animation complete: Panel fully scaled down.");
-            gameObject.SetActive(false);
+            StartCoroutine(DeactivatePanelAfterAnimation());
         });
+    }
+
+    private IEnumerator DeactivatePanelAfterAnimation()
+    {
+        yield return new WaitForSeconds(0.5f); // 애니메이션이 끝날 때까지 대기
+        gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update

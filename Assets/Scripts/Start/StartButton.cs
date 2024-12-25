@@ -1,40 +1,44 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro;  // TextMeshPro 사용
 
-public class StartSceneController : MonoBehaviour
+public class StartButton : MonoBehaviour
 {
     // UI 요소
-    public GameObject loadingPage;  // 로딩 화면 GameObject
-    public TextMeshProUGUI loadingText;  // 로딩 화면의 TextMeshProUGUI 텍스트
+    public GameObject loadingPanel;
     public GameObject mainMenu;  // 메인 메뉴 GameObject
+
+    public LoadingPanel loadingPanelScript;  // 로딩 화면 GameObject
 
     void Start()
     {
-        // 초기 상태에서 로딩 화면 비활성화
-        loadingPage.SetActive(false);
+        // LoadingPanel 스크립트를 찾음
+        loadingPanelScript = loadingPanel.GetComponent<LoadingPanel>();
+
+        Button button = GetComponent<Button>();
+
+        // Button 컴포넌트가 있는지 확인
+        if (button != null)
+        {
+            // OnClick() 이벤트에 OnButtonClick() 메서드를 추가
+            button.onClick.AddListener(OnButtonClick);
+            Debug.Log("StartButton Start: Component initialized.");
+        }
+        else
+        {
+            Debug.LogError("Button 컴포넌트가 이 오브젝트에 없습니다.");
+        }
     }
 
     // Start 버튼 클릭 시 호출되는 함수
-    public void OnStartButtonClicked()
+    public void OnButtonClick()
     {
-        // 메인 메뉴 숨기기
+        Debug.Log("Start button clicked!");
+
+       // 메인 메뉴 숨기기
         mainMenu.SetActive(false);
         
-        // 로딩 화면 활성화
-        loadingPage.SetActive(true);
-
-        // 로딩 텍스트 표시
-        loadingText.text = "In game...";  // "In game..." 텍스트로 설정
-
-        // 3초 후에 MainScene으로 이동
-        Invoke("LoadMainScene", 3f);  // 3초 후 LoadMainScene 함수 호출
-    }
-
-    // 로딩이 끝난 후 MainScene으로 전환
-    void LoadMainScene()
-    {
-        // MainScene으로 씬 전환
-        SceneManager.LoadScene("MainScene");  // MainScene 씬 이름으로 변경
+        // 로딩 화면 활성화 및 표시
+        loadingPanelScript.ShowPanel();
     }
 }

@@ -33,6 +33,7 @@ namespace Unity.Scripts.Game
         private int zombiesToKill;
         private int vaccinesCollected = 0;
         private int playerScore = 0;
+        public int maxWave = 1;
 
         private bool isPlayerAlive = true;
 
@@ -141,6 +142,13 @@ namespace Unity.Scripts.Game
 
         IEnumerator NextWave()
         {
+            if (currentWave >= maxWave)
+            {
+                Debug.Log("Maximum wave reached! Ending the game.");
+                EndGame(); // 게임 종료 또는 다른 로직
+                yield break; // 코루틴 종료
+            }
+
             Debug.Log("Wave completed. Next wave starts in " + waveInterval + " seconds.");
             yield return new WaitForSeconds(waveInterval);
 
@@ -162,6 +170,16 @@ namespace Unity.Scripts.Game
             }
         }
 
+        void EndGame()
+        {
+            // 게임 종료 로직 구현
+            Debug.Log("Game Over! Final Wave: " + currentWave);
+            // 마우스 커서 활성화
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            SceneManager.LoadScene("GameClearScene"); // 엔드 씬으로 이동 (필요 시)
+        }
+
         public void OnShoot()
         {
             int ammoCapacity = playerCharacterController.gun.ammoCapacity;
@@ -179,7 +197,13 @@ namespace Unity.Scripts.Game
         {
             isPlayerAlive = false;
             Debug.Log("Player Died! Final Score: " + playerScore);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Restart the game
+
+            // 마우스 커서 활성화
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            
+            // 게임 오버 로직
+            SceneManager.LoadScene("GameOverScene"); // 패배 씬으로 이동
         }
     }
 }

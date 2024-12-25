@@ -185,5 +185,33 @@ namespace Unity.Scripts.AI
 
             // Disable the zombie game object after the animation
         }
+
+        public void PauseZombie()
+        {
+            if (navMeshAgent != null)
+            {
+                navMeshAgent.isStopped = true; // NavMeshAgent 멈춤
+            }
+
+            if (animator != null)
+            {
+                animator.speed = 0; // 애니메이션 멈춤
+            }
+        }
+
+        public void ResumeZombie()
+        {
+            if (navMeshAgent != null)
+            {
+                navMeshAgent.isStopped = false; // NavMeshAgent 다시 시작
+            }
+
+            if (animator != null)
+            {
+                animator.speed = 1; // 애니메이션 멈춤
+            }
+            
+        }
     }
 }
+
