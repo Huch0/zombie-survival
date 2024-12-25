@@ -43,5 +43,13 @@ namespace Unity.Scripts.UI
         {
             waveText.text = $"Wave: {wave}";
         }
+
+        public void SaveFinalStats(int score, int wave)
+        {
+            PlayerPrefs.SetInt("FinalScore", score);
+            PlayerPrefs.SetInt("FinalWave", wave);
+            PlayerPrefs.Save();
+            Debug.Log($"Saved Final Stats - Score: {score}, Wave: {wave}");
+        }
     }
 }

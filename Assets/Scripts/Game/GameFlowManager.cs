@@ -177,6 +177,7 @@ namespace Unity.Scripts.Game
             // 마우스 커서 활성화
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            playerUIManager.SaveFinalStats(playerScore, currentWave);
             SceneManager.LoadScene("GameClearScene"); // 엔드 씬으로 이동 (필요 시)
         }
 
