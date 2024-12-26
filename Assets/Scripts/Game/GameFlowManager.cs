@@ -33,7 +33,7 @@ namespace Unity.Scripts.Game
         private int zombiesToKill;
         private int vaccinesCollected = 0;
         private int playerScore = 0;
-        private int maxWave = 5;
+        private int maxWave = 1;
 
         private bool isPlayerAlive = true;
 
